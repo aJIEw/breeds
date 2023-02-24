@@ -1,4 +1,5 @@
 import 'package:breeds/model/breed.dart';
+import 'package:breeds/widget/sort_button.dart';
 import 'package:flutter/material.dart';
 
 class SubDetailPage extends StatefulWidget {
@@ -11,13 +12,16 @@ class SubDetailPage extends StatefulWidget {
 class _SubDetailPageState extends State<SubDetailPage> {
   Breed? breed;
 
+  List<String> subBreeds = [];
+
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       breed = ModalRoute.of(context)!.settings.arguments as Breed?;
-      setState(() {});
+      subBreeds = breed?.subBreeds ?? [];
+      _sortList(reverse: true);
     });
   }
 
@@ -26,12 +30,15 @@ class _SubDetailPageState extends State<SubDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(breed?.name ?? ''),
+        actions: [
+          SortButton(onSort: _sortList),
+        ],
       ),
       body: ListView.separated(
-        itemCount: breed?.subBreeds?.length ?? 0,
+        itemCount: subBreeds.length,
         itemBuilder: (_, index) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text('${breed?.subBreeds?[index]}'),
+          child: Text(subBreeds[index]),
         ),
         separatorBuilder: (BuildContext context, int index) => Container(
           height: 1,
@@ -39,5 +46,15 @@ class _SubDetailPageState extends State<SubDetailPage> {
         ),
       ),
     );
+  }
+
+  void _sortList({bool reverse = false}) {
+    subBreeds.sort((a, b) => b.compareTo(a));
+
+    if (reverse) {
+      subBreeds = subBreeds.reversed.toList();
+    }
+
+    setState(() {});
   }
 }

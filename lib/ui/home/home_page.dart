@@ -2,6 +2,7 @@ import 'package:breeds/provider/provider_widget.dart';
 import 'package:breeds/provider/app_status.dart';
 import 'package:breeds/router/router.dart';
 import 'package:breeds/ui/home/home_viewmodel.dart';
+import 'package:breeds/widget/sort_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeViewModel? viewModel;
-  SortType sortType = SortType.ascending;
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +33,7 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               title: const Text('Dog Breeds'),
               actions: [
-                IconButton(
-                    onPressed: _onPressedSort,
-                    icon: Icon(sortType == SortType.ascending
-                        ? Icons.arrow_upward
-                        : Icons.arrow_downward)),
+                SortButton(onSort: viewModel.sortList),
               ],
             ),
             body: status.loading
@@ -68,25 +64,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  void _onPressedSort() {
-    if (sortType == SortType.ascending) {
-      viewModel!.sortList();
-
-      setState(() {
-        sortType = SortType.descending;
-      });
-    } else {
-      viewModel!.sortList(reverse: true);
-
-      setState(() {
-        sortType = SortType.ascending;
-      });
-    }
-  }
-}
-
-enum SortType {
-  ascending,
-  descending,
 }
