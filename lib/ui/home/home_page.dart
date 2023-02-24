@@ -1,5 +1,6 @@
 import 'package:breeds/provider/provider_widget.dart';
 import 'package:breeds/provider/app_status.dart';
+import 'package:breeds/router/router.dart';
 import 'package:breeds/ui/home/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,12 +42,28 @@ class _HomePageState extends State<HomePage> {
             ),
             body: status.loading
                 ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
+                : ListView.separated(
                     itemCount: viewModel.breedList.length,
                     itemBuilder: (_, index) {
-                      final item = viewModel.breedList[index];
-                      return Text('${item.name} ${item.subBreeds?.isNotEmpty}');
+                      final breed = viewModel.breedList[index];
+                      final clickable = breed.subBreeds?.isNotEmpty ?? false;
+                      return ListTile(
+                        leading: Text(breed.name),
+                        trailing:
+                            clickable ? const Icon(Icons.chevron_right) : null,
+                        onTap: () {
+                          if (clickable) {
+                            Navigator.pushNamed(context, XRouter.subDetail,
+                                arguments: breed);
+                          }
+                        },
+                      );
                     },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Container(
+                      height: 1,
+                      color: Colors.grey[300],
+                    ),
                   )),
       ),
     );
