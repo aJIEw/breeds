@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:breeds/core/api_service.dart';
+import 'package:breeds/core/base_viewmodel.dart';
 import 'package:breeds/model/breed.dart';
 import 'package:breeds/model/breed_response.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
-class HomeViewModel extends ChangeNotifier {
+class HomeViewModel extends BaseViewModel {
   List<Breed> breedList = [];
 
   Future<void> init() async {
